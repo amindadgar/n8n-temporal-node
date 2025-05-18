@@ -1,0 +1,134 @@
+{
+	"node": "n8n-nodes-base.temporalWorkflowCall",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": [
+		"Development"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.temporal.io/dev-guide/typescript/connect-to-a-cluster"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.temporal.io/dev-guide/typescript/workflows"
+			}
+		]
+	},
+	"alias": [
+		"Temporal",
+		"Workflow",
+		"Orchestration"
+	],
+	"description": {
+		"displayName": "Temporal Workflow Call",
+		"name": "temporalWorkflowCall",
+		"icon": "file:temporal.svg",
+		"group": [
+			"transform"
+		],
+		"version": 1,
+		"subtitle": "={{$parameter[\"operation\"]}}",
+		"description": "Execute Temporal workflows",
+		"defaults": {
+			"name": "Temporal Workflow Call"
+		},
+		"inputs": [
+			"main"
+		],
+		"outputs": [
+			"main"
+		],
+		"credentials": [
+			{
+				"name": "temporalApi",
+				"required": true
+			}
+		],
+		"properties": [
+			{
+				"displayName": "Operation",
+				"name": "operation",
+				"type": "options",
+				"noDataExpression": true,
+				"options": [
+					{
+						"name": "Start Workflow",
+						"value": "startWorkflow",
+						"description": "Start a new workflow execution",
+						"action": "Start a new workflow execution"
+					},
+					{
+						"name": "Get Workflow Status",
+						"value": "getWorkflowStatus",
+						"description": "Get the status of a workflow execution",
+						"action": "Get the status of a workflow execution"
+					}
+				],
+				"default": "startWorkflow"
+			},
+			{
+				"displayName": "Workflow ID",
+				"name": "workflowId",
+				"type": "string",
+				"default": "",
+				"required": true,
+				"displayOptions": {
+					"show": {
+						"operation": [
+							"startWorkflow",
+							"getWorkflowStatus"
+						]
+					}
+				},
+				"description": "The ID of the workflow"
+			},
+			{
+				"displayName": "Workflow Type",
+				"name": "workflowType",
+				"type": "string",
+				"default": "",
+				"required": true,
+				"displayOptions": {
+					"show": {
+						"operation": [
+							"startWorkflow"
+						]
+					}
+				},
+				"description": "The type of the workflow to execute"
+			},
+			{
+				"displayName": "Task Queue",
+				"name": "taskQueue",
+				"type": "string",
+				"default": "default",
+				"required": true,
+				"displayOptions": {
+					"show": {
+						"operation": [
+							"startWorkflow"
+						]
+					}
+				},
+				"description": "The task queue to use for the workflow"
+			},
+			{
+				"displayName": "Input",
+				"name": "input",
+				"type": "json",
+				"default": "{}",
+				"displayOptions": {
+					"show": {
+						"operation": [
+							"startWorkflow"
+						]
+					}
+				},
+				"description": "The input to pass to the workflow"
+			}
+		]
+	}
+}
