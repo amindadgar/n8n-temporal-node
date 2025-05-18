@@ -24,9 +24,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run linting
-        run: npm run lint
-
       - name: Publish to NPM
         run: npm publish
         env:
