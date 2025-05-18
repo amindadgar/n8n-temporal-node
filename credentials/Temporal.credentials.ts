@@ -4,9 +4,9 @@ import {
 } from 'n8n-workflow';
 
 export class Temporal implements ICredentialType {
-	name = 'temporalApi';
-	displayName = 'Temporal API';
-	documentationUrl = 'https://docs.temporal.io/dev-guide/typescript/connect-to-a-cluster';
+	name = 'temporal';
+	displayName = 'Temporal';
+	documentationUrl = 'https://docs.temporal.io/develop/typescript';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Server Address',
