@@ -25,7 +25,7 @@
 	"description": {
 		"displayName": "Temporal Workflow Call",
 		"name": "temporalWorkflowCall",
-		"icon": "file:temporalio.svg",
+		"icon": "temporalio.svg",
 		"group": [
 			"transform"
 		],

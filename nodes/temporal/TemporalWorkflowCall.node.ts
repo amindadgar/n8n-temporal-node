@@ -147,7 +147,7 @@ export class TemporalWorkflowCall implements INodeType {
 					const input = this.getNodeParameter('input', i) as string;
 					const parsedInput = JSON.parse(input);
 
-					const handle = await client.workflow.start(workflowType, {
+					const handle = await client.workflow.execute(workflowType, {
 						workflowId,
 						taskQueue,
 						args: [parsedInput],
@@ -155,8 +155,7 @@ export class TemporalWorkflowCall implements INodeType {
 
 					returnData.push({
 						json: {
-							workflowId: handle.workflowId,
-							runId: handle.firstExecutionRunId,
+							result: handle,
 						},
 					});
 				} else if (operation === 'getWorkflowStatus') {
