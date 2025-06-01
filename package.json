@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-temporalio",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "n8n community node for Temporal.io workflow orchestration",
   "keywords": [
     "n8n-community-node-package"
