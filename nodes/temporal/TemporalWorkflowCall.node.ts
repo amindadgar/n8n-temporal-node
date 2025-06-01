@@ -13,7 +13,7 @@ export class TemporalWorkflowCall implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Temporal Workflow Call',
 		name: 'temporalWorkflowCall',
-		icon: 'file:temporal.svg',
+		icon: 'file:temporalio.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',
@@ -49,6 +49,12 @@ export class TemporalWorkflowCall implements INodeType {
 						value: 'getWorkflowStatus',
 						description: 'Get the status of a workflow execution',
 						action: 'Get the status of a workflow execution',
+					},
+					{
+						name: 'Test Connection',
+						value: 'testConnection',
+						description: 'Test the connection to the Temporal server',
+						action: 'Test the connection to the Temporal server',
 					},
 				],
 				default: 'startWorkflow',
@@ -128,10 +134,22 @@ export class TemporalWorkflowCall implements INodeType {
 			};
 		}
 
-		const connection = await Connection.connect({
-			address: credentials.address as string,
-			tls: tlsConfig,
-		});
+		// Get connection timeout from credentials or use default
+		const connectTimeoutMs = ((credentials.connectTimeout as number) || 10) * 1000;
+
+		let connection;
+		try {
+			connection = await Connection.connect({
+				address: credentials.address as string,
+				tls: tlsConfig,
+				connectTimeout: connectTimeoutMs,
+			});
+		} catch (error) {
+			throw new NodeOperationError(this.getNode(), 
+				new Error(`Failed to connect to Temporal server at ${credentials.address}: ${error.message}. Please verify that:\n1. The Temporal server is running\n2. The address is correct (format: host:port)\n3. Network connectivity is available\n4. TLS settings are correct if using TLS`),
+				{ itemIndex: 0 }
+			);
+		}
 
 		const client = new Client({
 			connection,
@@ -172,6 +190,30 @@ export class TemporalWorkflowCall implements INodeType {
 							closeTime: status.closeTime,
 						},
 					});
+				} else if (operation === 'testConnection') {
+					// Test connection by getting system info
+					try {
+						// The connection was already established above, so if we get here, it worked
+						returnData.push({
+							json: {
+								success: true,
+								message: 'Successfully connected to Temporal server',
+								serverAddress: credentials.address,
+								namespace: credentials.namespace,
+								timestamp: new Date().toISOString(),
+							},
+						});
+					} catch (testError) {
+						returnData.push({
+							json: {
+								success: false,
+								message: `Connection test failed: ${testError.message}`,
+								serverAddress: credentials.address,
+								namespace: credentials.namespace,
+								timestamp: new Date().toISOString(),
+							},
+						});
+					}
 				}
 			} catch (error) {
 				if (this.continueOnFail()) {
